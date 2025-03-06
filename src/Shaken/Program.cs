@@ -1,5 +1,6 @@
 ﻿using System.Buffers;
 using System.Data;
+using System.Diagnostics;
 using System.Text;
 using Valleysoft.DockerRegistryClient;
 using Valleysoft.Dredge;
@@ -9,6 +10,10 @@ const string registry = "mcr.microsoft.com";
 if (args.Length == 0)
 {
     Console.WriteLine("Please provide a file path as an argument.");
+    Console.WriteLine("Usage: Shaken <file-path> [strip]");
+    Console.WriteLine("strip: Optional. If specified, the digest will be removed from the image reference.");
+    Console.WriteLine("Example: Shaken <file-path>");
+    Console.WriteLine("Example: Shaken <file-path> strip");
     return;
 }
 
@@ -21,6 +26,9 @@ if (!File.Exists(filePath))
     return;
 }
 
+bool strip = args.Length > 1 && args[1].Equals("strip", StringComparison.OrdinalIgnoreCase) ? true : false;
+int count = 0;
+
 using (var reader = new StreamReader(filePath))
 using (var writer = new StreamWriter(tempFile))
 {
@@ -29,20 +37,23 @@ using (var writer = new StreamWriter(tempFile))
     {
         if (line.Contains(registry))
         {
-            line = await Shaken(line);
-            Console.WriteLine();
+            count++;
+            line = await Shaken(line, strip);
         }
+
         writer.WriteLine(line);
     }
 }
 
+Console.WriteLine($"Updated {count} image references in {filePath}");
+
 File.Delete(filePath);
 File.Move(tempFile, filePath);
 
-static async Task<string> Shaken(string line)
+static async Task<string> Shaken(string line, bool strip = false)
 {
     StringBuilder sb = new();
-    Console.WriteLine($"Line: {line}");
+    WriteLine($"Line: {line}");
     int index = line.IndexOf(registry);
     if (index < 0)
     {
@@ -51,25 +62,39 @@ static async Task<string> Shaken(string line)
 
     sb.Append(line[..index]);
     string image = line[index..];
-    Console.WriteLine($"Image: {image}");
+    WriteLine($"Image: {image}");
     var imageName = ImageName.Parse(image);
-    Console.WriteLine($"ImageName: {imageName}");
+    WriteLine($"ImageName: {imageName}");
     using RegistryClient client = new(imageName.Registry ?? registry);
 
     // Tag is required for digest
     if (imageName.Tag is null)
     {
-        Console.WriteLine($"ImageName: {imageName}");
-        throw new Exception($"ImageName.Tag is null");
+        WriteLine($"ImageName: {imageName}");
+        throw new Exception($"ImageName.Tag is null: {imageName}.");
     }
 
     // Goal format:
     // mcr.microsoft.com/dotnet-buildtools/prereqs:debian-12-helix-arm32v7@sha256:f765e1228b4977a6a18edd88702d444a7ffaa550c7c5b23097635fbdda41e81d
     string digest = await client.Manifests.GetDigestAsync(imageName.Repo, imageName.Tag);
-    string shaken = $"{imageName.Registry}/{imageName.Repo}:{imageName.Tag}@{digest}";
-    Console.WriteLine($"SHAKEN: {shaken}");
-    sb.Append(shaken);
+    string reference = "";
+    if (strip)
+    {
+        reference = $"{imageName.Registry}/{imageName.Repo}:{imageName.Tag}";
+    }
+    else
+    {
+        reference = $"{imageName.Registry}/{imageName.Repo}:{imageName.Tag}@{digest}";
+    }
+    WriteLine($"New image: {reference}");
+    sb.Append(reference);
     string newline = sb.ToString();
-    Console.WriteLine($"Newline: {newline}");
+    WriteLine($"Newline: {newline}\n");
     return newline;
+}
+
+[Conditional("DEBUG")]
+static void WriteLine(string message)
+{
+    Console.WriteLine(message);
 }
