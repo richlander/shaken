@@ -22,12 +22,13 @@ public class ImageName(string? registry, string repo, string? tag, string? diges
         In essence:
         - ':` -- Zero, one or two
         - `@` -- Zero or one
-
         */
+
         string? registry = null;
+        string? repo = null;
+        string? tag = null;
+        string? digest = null;
         int slashIndex = imageName.IndexOf('/');
-        int atIndex = imageName.IndexOf('@');
-        int colonIndex = imageName.IndexOf(':');
 
         if (slashIndex >= 0)
         {
@@ -40,12 +41,9 @@ public class ImageName(string? registry, string repo, string? tag, string? diges
             }
         }
 
-        string? tag = null;
-        string? digest = null;
-        string? repo = null;
+        int atIndex = imageName.IndexOf('@');
+        int colonIndex = imageName.IndexOf(':');
 
-        atIndex = imageName.IndexOf('@');
-        colonIndex = imageName.IndexOf(':');
         // Case #1
         if (atIndex < 0 && colonIndex < 0)
         {
@@ -113,7 +111,8 @@ public class ImageName(string? registry, string repo, string? tag, string? diges
             return sb.ToString();
         }
 
-        // Both tag and digest are not null
+        // Both tag and digest are present
+        // Goal format:
         // mcr.microsoft.com/dotnet-buildtools/prereqs:debian-12-helix-arm32v7@sha256:f765e1228b4977a6a18edd88702d444a7ffaa550c7c5b23097635fbdda41e81d
         sb.Append(':');
         sb.Append(Tag);
