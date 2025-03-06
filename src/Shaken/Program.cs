@@ -38,10 +38,10 @@ using (var writer = new StreamWriter(tempFile))
         if (line.Contains(registry))
         {
             count++;
-            line = await Shaken(line);
+            line = await Shaken(line, strip);
         }
 
-        Debug.WriteLine(line);
+        writer.WriteLine(line);
     }
 }
 
@@ -53,7 +53,7 @@ File.Move(tempFile, filePath);
 static async Task<string> Shaken(string line, bool strip = false)
 {
     StringBuilder sb = new();
-    Debug.WriteLine($"Line: {line}");
+    WriteLine($"Line: {line}");
     int index = line.IndexOf(registry);
     if (index < 0)
     {
@@ -62,16 +62,16 @@ static async Task<string> Shaken(string line, bool strip = false)
 
     sb.Append(line[..index]);
     string image = line[index..];
-    Debug.WriteLine($"Image: {image}");
+    WriteLine($"Image: {image}");
     var imageName = ImageName.Parse(image);
-    Debug.WriteLine($"ImageName: {imageName}");
+    WriteLine($"ImageName: {imageName}");
     using RegistryClient client = new(imageName.Registry ?? registry);
 
     // Tag is required for digest
     if (imageName.Tag is null)
     {
-        Debug.WriteLine($"ImageName: {imageName}");
-        throw new Exception($"ImageName.Tag is null");
+        WriteLine($"ImageName: {imageName}");
+        throw new Exception($"ImageName.Tag is null: {imageName}.");
     }
 
     // Goal format:
@@ -86,9 +86,15 @@ static async Task<string> Shaken(string line, bool strip = false)
     {
         reference = $"{imageName.Registry}/{imageName.Repo}:{imageName.Tag}@{digest}";
     }
-    Debug.WriteLine($"New image: {reference}");
+    WriteLine($"New image: {reference}");
     sb.Append(reference);
     string newline = sb.ToString();
-    Debug.WriteLine($"Newline: {newline}/n");
+    WriteLine($"Newline: {newline}\n");
     return newline;
+}
+
+[Conditional("DEBUG")]
+static void WriteLine(string message)
+{
+    Console.WriteLine(message);
 }
