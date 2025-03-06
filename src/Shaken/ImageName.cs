@@ -3,20 +3,12 @@ using System.Text;
 
 namespace Valleysoft.Dredge;
 
-public class ImageName
+public class ImageName(string? registry, string repo, string? tag, string? digest)
 {
-    public ImageName(string? registry, string repo, string? tag, string? digest)
-    {
-        Registry = registry;
-        Repo = repo;
-        Tag = tag;
-        Digest = digest;
-    }
-
-    public string? Registry { get; }
-    public string Repo { get; }
-    public string? Tag { get; }
-    public string? Digest { get; }
+    public string? Registry { get; } = registry;
+    public string Repo { get; } = repo;
+    public string? Tag { get; } = tag;
+    public string? Digest { get; } = digest;
     
     public static ImageName Parse(ReadOnlySpan<char> imageName)
     {

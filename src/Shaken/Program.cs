@@ -58,14 +58,6 @@ static async Task<string> Shaken(string line)
 
     // Goal format:
     // mcr.microsoft.com/dotnet-buildtools/prereqs:debian-12-helix-arm32v7@sha256:f765e1228b4977a6a18edd88702d444a7ffaa550c7c5b23097635fbdda41e81d
-
-    // This throwns on that format
-    if (imageName.Tag is null)
-    {
-        throw new ArgumentException("Tag is null");
-    }
-
-
     string digest = await client.Manifests.GetDigestAsync(imageName.Repo, imageName.Tag);
     string shaken = $"{imageName.Registry}/{imageName.Repo}:{imageName.Tag}@{digest}";
     Console.WriteLine($"SHAKEN: {shaken}");
