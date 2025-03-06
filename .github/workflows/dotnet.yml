@@ -21,6 +21,6 @@ jobs:
       with:
         dotnet-version: 10.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore src/Shaken.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore src/Shaken.sln
