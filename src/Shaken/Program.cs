@@ -26,7 +26,7 @@ if (!File.Exists(filePath))
     return;
 }
 
-bool strip = args.Length > 1 && args[1].Equals("strip", StringComparison.OrdinalIgnoreCase) ? true : false;
+bool strip = args.Length > 1 && args[1].Equals("strip", StringComparison.OrdinalIgnoreCase);
 int count = 0;
 
 using (var reader = new StreamReader(filePath))
