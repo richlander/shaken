@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Valleysoft.Dredge;
@@ -9,7 +8,7 @@ public class ImageName(string? registry, string repo, string? tag, string? diges
     public string Repo { get; } = repo;
     public string? Tag { get; } = tag;
     public string? Digest { get; } = digest;
-    
+
     public static ImageName Parse(ReadOnlySpan<char> imageName)
     {
         /*

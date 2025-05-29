@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shaken", "Shaken\shaken.csproj", "{142F0E06-A337-43AD-8977-7BD34C5B7DC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainerInfo", "ContainerInfo\ContainerInfo.csproj", "{17042682-4E43-48E0-8041-5E696017FE70}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{142F0E06-A337-43AD-8977-7BD34C5B7DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{142F0E06-A337-43AD-8977-7BD34C5B7DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{142F0E06-A337-43AD-8977-7BD34C5B7DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{142F0E06-A337-43AD-8977-7BD34C5B7DC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17042682-4E43-48E0-8041-5E696017FE70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17042682-4E43-48E0-8041-5E696017FE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17042682-4E43-48E0-8041-5E696017FE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17042682-4E43-48E0-8041-5E696017FE70}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
